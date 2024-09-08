@@ -1,0 +1,30 @@
+USER-SUPPLIED VALUES:
+additionalVolumeMounts:
+- mountPath: /app/data/.snapshot
+  name: tempfs-volume
+additionalVolumes:
+- emptyDir: {}
+  name: tempfs-volume
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  className: nginx
+  enabled: true
+  hosts:
+  - host: uptime-kuma.domain.name
+    paths:
+    - path: /
+      pathType: Prefix
+  tls:
+  - hosts:
+    - uptime-kuma.domain.name
+    secretName: domain-name
+persistence:
+  accessMode: ReadWriteOnce
+  enabled: true
+  existingClaim: ""
+  size: 30Gi
+  storageClass: nfs-client
+replicaCount: 3
+volume:
+  enabled: true
