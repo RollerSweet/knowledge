@@ -1,6 +1,6 @@
 # Installing Kubernetes Dashboard
 
-To install the Kubernetes Dashboard, follow these steps:
+### To install the Kubernetes Dashboard, follow these steps:
 
 1. Add the Kubernetes Dashboard Helm repository and Update your Helm repositories:
 ```bash
