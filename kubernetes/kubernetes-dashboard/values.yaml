@@ -1,0 +1,21 @@
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  hosts:
+    - kubernetes-dashboard.domain.name
+  tls:
+    - secretName: domain-name
+      hosts:
+        - kubernetes-dashboard.domain.name
+
+protocolHttp: true
+service:
+  externalPort: 80
+
+extraArgs:
+  - --token-ttl=0
+
+rbac:
+  clusterReadOnlyRole: true
