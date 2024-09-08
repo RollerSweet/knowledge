@@ -1,0 +1,57 @@
+gitlabUrl: https://gitlab.com/
+
+imagePullPolicy: Always
+concurrent: 10
+
+imagePullSecrets:
+  - name: harbor-pull-secret
+
+replicas: 2
+
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
+  name: gitlab-runner-sa
+
+runners:
+  config: |
+    [[runners]]
+      name = "gitlab-runner"
+      executor = "kubernetes"
+      [runners.kubernetes]
+        namespace = "gitlab-runner"
+        image = "rollersweet/nvm-az-kubectl:latest"
+        privileged = true
+        pull_policy = "always"
+        [runners.kubernetes.volumes]
+          [[runners.kubernetes.volumes.host_path]]
+            name = "docker-socket"
+            mount_path = "/var/run/docker.sock"
+            host_path = "/var/run/docker.sock"
+          [[runners.kubernetes.volumes.host_path]]
+            name = "cgroups"
+            mount_path = "/sys/fs/cgroup"
+            host_path = "/sys/fs/cgroup"
+      [runners.custom_build_dir]
+        enabled = true
+
+unregisterRunners: true
+
+securityContext:
+  allowPrivilegeEscalation: true
+  readOnlyRootFilesystem: false
+  runAsNonRoot: true
+  privileged: true
+  capabilities:
+    drop: ["ALL"]
+
+podSecurityContext:
+  runAsUser: 999
+  fsGroup: 999
+
+image:
+  registry: docker.io
+  image: gitlab/gitlab-runner
+  tag: latest
